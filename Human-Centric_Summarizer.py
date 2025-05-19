@@ -70,7 +70,8 @@ def extract_and_summarize(file_path):
     # Split the text into 1000 token chunks
     tokens = tokenizer(combined_text, return_tensors='pt')['input_ids'][0]
     chunk_size = 1000
-    chunks = [tokens[i:i + chunk_size] for i in range(0, len(tokens), chunk_size)]
+    stride = 200  # e.g. overlap 200 tokens between chunks
+    chunks = [tokens[i:i + chunk_size] for i in range(0, len(tokens), chunk_size - stride)]
 
     # Summarize each chunk
     summaries = [summarize_text(tokenizer.decode(chunk, skip_special_tokens=True)) for chunk in chunks]
